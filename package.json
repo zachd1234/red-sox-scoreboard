@@ -1,0 +1,26 @@
+{
+  "name": "fenway-signal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx server.ts",
+    "start": "tsx server.ts",
+    "build": "tsc --noEmit && vite build",
+    "test": "tsx --test test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "sim:frame": "tsx scripts/send-fixture.ts",
+    "sim:test": "tsx scripts/simulator-test.ts",
+    "sim:loop": "tsx scripts/simulator-loop.ts"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "vite": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}
