@@ -8,9 +8,9 @@ export const digits = ['111/101/101/101/111','010/110/010/010/111','111/001/111/
 // Boston B: hooked left serifs, two open counters, and pointed outer lobes.
 // At nine columns, black negative space preserves the silhouette better than an outline.
 export const defaultLogo = [
-  '011001100',
+  '011111100',
   '111111110',
-  '101100110',
+  '111100110',
   '001100110',
   '001100111',
   '001100110',
@@ -22,9 +22,9 @@ export const defaultLogo = [
   '001100110',
   '001100111',
   '001100110',
-  '101100110',
+  '111100110',
   '111111110',
-  '011001100',
+  '011111100',
 ];
 export const blank = (): Frame => Array.from({length:17},()=>Array.from({length:9},():RGB=>[0,0,0]));
 export const validFrame = (f: unknown): f is Frame => Array.isArray(f)&&f.length===17&&f.every(r=>Array.isArray(r)&&r.length===9&&r.every(p=>Array.isArray(p)&&p.length===3&&p.every(c=>Number.isInteger(c)&&c>=0&&c<=255)));

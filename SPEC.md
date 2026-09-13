@@ -1,3 +1,11 @@
+Implementation revision: solid Boston B hooks
+
+Fill the single dark pixel inside each left hook and join the top/bottom
+red strokes into continuous edges. Preserve both main black counters.
+This smooths the logo without changing its size, colors, or display timing.
+
+---
+
 Implementation revision: remove confetti
 
 Boston scoring now immediately shows the updated score for seven seconds.
