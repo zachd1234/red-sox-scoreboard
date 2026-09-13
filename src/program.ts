@@ -1,4 +1,4 @@
-import { red, render, supported, type Frame, type GameState } from './display';
+import { red, white, render, supported, type Frame, type GameState } from './display';
 
 export type Screen = 'logo' | 'score' | 'celebration' | 'calibration';
 export const slideMs = 240;
@@ -51,10 +51,14 @@ export class DisplayProgram {
     };
     if (this.celebrateAt !== null && now - this.celebrateAt < celebrationMs) {
       const frame = screenFrame('celebration');
-      // Red streamers travel along the edges without flashing the whole display.
-      const step = Math.floor((now - this.celebrateAt) / 90);
-      for (const x of [0, 8]) for (let y = 0; y < 17; y++) {
-        if ((y + step + x) % 7 < 2) frame[y][x] = [...red];
+      // Sparse red/white paper pixels drift downward over the stationary B.
+      const elapsed = now - this.celebrateAt;
+      for (let particle = 0; particle < 12; particle++) {
+        const fall = Math.floor(elapsed / (65 + (particle % 3) * 20));
+        const y = (particle * 5 + fall) % 23 - 3;
+        const drift = Math.floor(elapsed / 300 + particle) % 3 - 1;
+        const x = ((particle * 7 + drift) % 9 + 9) % 9;
+        if (y >= 0 && y < 17) frame[y][x] = [...(particle % 3 === 0 ? red : white)];
       }
       return finish(frame, 'celebration');
     }

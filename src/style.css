@@ -4,3 +4,5 @@
 #bostonRun{color:var(--lime);border-color:#81995e}
 
 .opponent .team-abbr{color:#ffbe41}
+
+.demo-playback{display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:18px;background:#1e2d20;border:1px solid #344431;border-radius:5px}.demo-playback[hidden]{display:none}.demo-playback>div{flex:1}.demo-playback span{font:9px var(--mono);color:var(--lime)}.demo-playback small{display:block;font-size:9px;color:#91a18a;margin-top:5px}

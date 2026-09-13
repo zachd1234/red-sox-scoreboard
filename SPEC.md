@@ -1,3 +1,17 @@
+Implementation revision: automatic mock game and confetti
+
+Demo mode now starts in the top of the first at 0–0 and progresses through
+all nine innings, scoring for both teams and holding the logo between halves.
+Boston bats in the bottom half. A 6–5 walk-off ends the game; after a 12-second
+final hold, the 305-second timeline repeats. Pause, Resume, and Restart are
+available; manual controls and fixtures pause the timeline.
+Boston scoring replaces edge streamers with sparse falling red-and-white
+confetti over the stationary B, followed by the updated score. Live Boston
+scoring uses the same celebration. This supersedes earlier demo and streamer
+behavior; all demo scores remain explicitly fictional.
+
+---
+
 Implementation revision: centered standard layout and opponent color
 
 When both scores are below 10, move the score/inning composition down two rows:

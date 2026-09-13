@@ -1,6 +1,7 @@
 import { DisplayProgram } from '../src/program';
 import { FrameTransport } from '../src/transport';
-import { defaultLogo, type GameState } from '../src/display';
+import { defaultLogo } from '../src/display';
+import { demoState } from '../src/demo';
 
 // Continuous mock display. Stop with Ctrl+C before connecting a live sender.
 const nativeFetch = globalThis.fetch;
@@ -18,19 +19,15 @@ transport.onStatus = (message): void => {
   else console.error(message);
 };
 const program = new DisplayProgram();
-const state: GameState = {
-  gameId: 'continuous-demo', status: 'live', bostonScore: 1, opponentScore: 1,
-  inning: 5, half: 'top', fetchedAt: new Date().toISOString(),
-};
-console.log('CONTINUOUS DEMO — icy-otter — mocked 1–1, top 5. Ctrl+C to stop.');
+console.log('CONTINUOUS DEMO — icy-otter — nine-inning mock game, repeats every ~5 minutes.');
 const started = performance.now();
 const timer = setInterval(() => {
-  state.fetchedAt = new Date().toISOString();
+  const state = demoState(performance.now() - started);
   const output = program.next(state, 'auto', .85, defaultLogo, performance.now() - started);
   transport.offer(output.frame);
   if (!output.sliding && screen !== output.screen) {
     screen = output.screen;
-    console.log(`${screen} · ${delivered} frames delivered`);
+    console.log(`${screen} · ${state.half} ${state.inning} · BOS ${state.bostonScore}–${state.opponentScore} OPP · ${delivered} frames delivered`);
   }
 }, 1000 / 30);
 const stop = (): void => {

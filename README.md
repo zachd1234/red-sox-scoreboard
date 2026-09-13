@@ -7,7 +7,7 @@ The Node server is needed for the feed and simulator proxies.
 
 During live play the program holds logo for 2 seconds and score/inning for 7,
 with 240 ms sideways slides between stationary screens (9.48 seconds per cycle).
-Boston runs trigger a 1.8-second red-streamer celebration followed by 7 seconds
+Boston runs trigger a 1.8-second pixel-confetti celebration followed by 7 seconds
 of updated score. Breaks hold the logo; a walk-off celebrates once and holds final.
 
 Demo mode includes score/inning controls, a Boston scores +1 button,
@@ -58,5 +58,15 @@ latency measurements, limitations, and next improvements.
 
 For continuous rotation, run `npm run sim:loop` instead of `sim:test`.
 This keeps sending the 2-second B logo / 7-second score-and-inning cycle until
-stopped with Ctrl+C. It uses a mocked 1–1 score in the top of the fifth.
+stopped with Ctrl+C. It plays a nine-inning mock game from 0–0 to a 6–5 Boston walk-off, then repeats.
 Stop this sender before connecting the live control page to the same instance.
+
+Demo mode automatically plays a nine-inning game in 5 minutes 5 seconds.
+Boston is home: the opponent bats in the top half, Boston in the bottom.
+Each ordinary half has 14 seconds of play and a 3-second logo break. Score
+changes occur four seconds into play; Boston scoring produces sparse falling
+red-and-white pixel confetti for 1.8 seconds, followed by the updated score.
+The game ends on a 6–5 walk-off, holds final for 12 seconds, then restarts at 0–0.
+Pause/Resume and Restart control the replay; manual edits and quick fixtures
+pause automatic progression. Both the browser demo and `sim:loop` share the
+same timeline. All demo scores are fictional.
