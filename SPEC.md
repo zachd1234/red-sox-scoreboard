@@ -1,3 +1,12 @@
+Implementation revision: remove confetti
+
+Boston scoring now immediately shows the updated score for seven seconds.
+No confetti or other celebration screen. Walk-offs immediately hold final.
+The progressing demo, inning breaks, and regular logo/score slides continue.
+This supersedes celebration behavior below.
+
+---
+
 Implementation revision: automatic mock game and confetti
 
 Demo mode now starts in the top of the first at 0–0 and progresses through

@@ -31,13 +31,13 @@ test('Boston scoring interrupts once, then holds updated score for seven seconds
   const p = new DisplayProgram();
   next(p, 0);
   const scored = state({ bostonScore: 2 });
-  assert.equal(next(p, 1000, scored).screen, 'celebration');
-  assert.equal(next(p, 2799, scored).screen, 'celebration');
+  assert.equal(next(p, 1000, scored).screen, 'score');
+  assert.deepEqual(next(p, 1000, scored).frame, render(scored));
   assert.equal(next(p, 2800, scored).screen, 'score');
-  assert.equal(next(p, 9799, scored).sliding, false);
-  assert.equal(next(p, 9800, scored).sliding, true);
+  assert.equal(next(p, 7999, scored).sliding, false);
+  assert.equal(next(p, 8000, scored).sliding, true);
   next(p, 10000, state({ bostonScore: 1 }));
-  assert.notEqual(next(p, 11000, scored).screen, 'celebration');
+  assert.equal(next(p, 11000, scored).screen, 'score');
 });
 
 test('breaks hold logo; resumption and recovered data start fresh without celebrations', () => {
@@ -53,20 +53,20 @@ test('breaks hold logo; resumption and recovered data start fresh without celebr
   assert.equal(next(p, 26000, state({ bostonScore: 5 })).screen, 'logo');
 });
 
-test('walk-off celebrates once then holds final score indefinitely', () => {
+test('walk-off immediately holds final score indefinitely', () => {
   const p = new DisplayProgram();
   next(p, 0);
   const final = state({ status: 'final', bostonScore: 2, half: 'bottom', inning: 9 });
-  assert.equal(next(p, 500, final).screen, 'celebration');
+  assert.equal(next(p, 500, final).screen, 'score');
   assert.equal(next(p, 2300, final).screen, 'score');
   assert.equal(next(p, 99999, final).screen, 'score');
   assert.ok(next(p, 99999, final).frame.slice(14).flat().every(pixel => pixel.every(c => c === 0)));
 });
 
-test('new games, opponent runs, resets and forced modes do not celebrate', () => {
+test('new games, opponent runs, resets and forced modes preserve logo-first playback', () => {
   const p = new DisplayProgram();
   next(p, 0);
-  assert.notEqual(next(p, 100, state({ opponentScore: 2 })).screen, 'celebration');
+  assert.equal(next(p, 100, state({ opponentScore: 2 })).screen, 'logo');
   assert.equal(next(p, 200, state({ gameId: 'new', bostonScore: 8 })).screen, 'logo');
   p.reset();
   assert.equal(next(p, 300, state({ bostonScore: 12 })).screen, 'logo');

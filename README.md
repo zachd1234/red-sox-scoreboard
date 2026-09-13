@@ -7,8 +7,8 @@ The Node server is needed for the feed and simulator proxies.
 
 During live play the program holds logo for 2 seconds and score/inning for 7,
 with 240 ms sideways slides between stationary screens (9.48 seconds per cycle).
-Boston runs trigger a 1.8-second pixel-confetti celebration followed by 7 seconds
-of updated score. Breaks hold the logo; a walk-off celebrates once and holds final.
+Boston runs immediately show the updated score for 7 seconds. Breaks hold
+the logo; a walk-off immediately holds final.
 
 Demo mode includes score/inning controls, a Boston scores +1 button,
 and live, break, overflow, final, and stale fixtures. Display settings includes the editable 17 × 9 Boston B mask,
@@ -64,8 +64,8 @@ Stop this sender before connecting the live control page to the same instance.
 Demo mode automatically plays a nine-inning game in 5 minutes 5 seconds.
 Boston is home: the opponent bats in the top half, Boston in the bottom.
 Each ordinary half has 14 seconds of play and a 3-second logo break. Score
-changes occur four seconds into play; Boston scoring produces sparse falling
-red-and-white pixel confetti for 1.8 seconds, followed by the updated score.
+changes occur four seconds into play; Boston scoring immediately displays
+the updated score without confetti or other celebration effects.
 The game ends on a 6–5 walk-off, holds final for 12 seconds, then restarts at 0–0.
 Pause/Resume and Restart control the replay; manual edits and quick fixtures
 pause automatic progression. Both the browser demo and `sim:loop` share the

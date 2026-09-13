@@ -1,9 +1,8 @@
-import { red, white, render, supported, type Frame, type GameState } from './display';
+import { render, supported, type Frame, type GameState } from './display';
 
-export type Screen = 'logo' | 'score' | 'celebration' | 'calibration';
+export type Screen = 'logo' | 'score' | 'calibration';
 export const slideMs = 240;
 const holds = { logo: 2000, score: 7000 };
-const celebrationMs = 1800;
 
 export const slide = (from: Frame, to: Frame, progress: number): Frame => {
   const offset = Math.max(0, Math.min(9, Math.floor(progress * 9)));
@@ -15,15 +14,13 @@ export class DisplayProgram {
   private previous: GameState | null = null;
   private highScore = 0;
   private start = 0;
-  private celebrateAt: number | null = null;
-  private afterCelebration = false;
+  private afterScore = false;
   private wasActive = false;
 
   reset(): void {
     this.previous = null;
-    this.celebrateAt = null;
     this.wasActive = false;
-    this.afterCelebration = false;
+    this.afterScore = false;
   }
 
   next(s: GameState, mode: string, brightness: number, mask: string[], now: number,
@@ -35,37 +32,22 @@ export class DisplayProgram {
     const scored = sameGame && this.wasActive && supported(s) && fresh &&
       mode === 'auto' && ['live', 'final'].includes(s.status) && s.bostonScore > this.highScore;
     this.highScore = Math.max(this.highScore, s.bostonScore);
-    if (active && !this.wasActive) { this.start = now; this.afterCelebration = false; }
-    if (scored) { this.celebrateAt = now; this.start = now + celebrationMs; this.afterCelebration = true; }
+    if (active && !this.wasActive) { this.start = now; this.afterScore = false; }
+    if (scored) { this.start = now; this.afterScore = true; }
     this.previous = { ...s };
     this.wasActive = active;
     if (mode !== 'auto' || !fresh || !supported(s) || !['live', 'final'].includes(s.status)) {
-      this.celebrateAt = null;
-      return { frame: render(s, mode, brightness, mask, wallTime),
+        return { frame: render(s, mode, brightness, mask, wallTime),
         screen: mode === 'calibration' ? 'calibration' : 'logo', sliding: false };
     }
-    const screenFrame = (screen: Screen): Frame => render(s, screen === 'logo' || screen === 'celebration' ? 'logo' : 'auto', 1, mask, wallTime);
+    const screenFrame = (screen: Screen): Frame => render(s, screen === 'logo' ? 'logo' : 'auto', 1, mask, wallTime);
     const finish = (frame: Frame, screen: Screen, sliding = false): {frame: Frame; screen: Screen; sliding: boolean} => {
       const gain = Number.isFinite(brightness) ? Math.max(0, Math.min(1, brightness)) : 1;
       return { frame: frame.map(row => row.map(pixel => pixel.map(c => Math.round(c * gain)) as [number, number, number])), screen, sliding };
     };
-    if (this.celebrateAt !== null && now - this.celebrateAt < celebrationMs) {
-      const frame = screenFrame('celebration');
-      // Sparse red/white paper pixels drift downward over the stationary B.
-      const elapsed = now - this.celebrateAt;
-      for (let particle = 0; particle < 12; particle++) {
-        const fall = Math.floor(elapsed / (65 + (particle % 3) * 20));
-        const y = (particle * 5 + fall) % 23 - 3;
-        const drift = Math.floor(elapsed / 300 + particle) % 3 - 1;
-        const x = ((particle * 7 + drift) % 9 + 9) % 9;
-        if (y >= 0 && y < 17) frame[y][x] = [...(particle % 3 === 0 ? red : white)];
-      }
-      return finish(frame, 'celebration');
-    }
-    this.celebrateAt = null;
     if (s.status === 'final') return finish(screenFrame('score'), 'score');
     let elapsed = Math.max(0, now - this.start);
-    const order: Array<'logo' | 'score'> = this.afterCelebration
+    const order: Array<'logo' | 'score'> = this.afterScore
       ? ['score', 'logo'] : ['logo', 'score'];
     elapsed %= holds.logo + holds.score + slideMs * order.length;
     for (let i = 0; i < order.length; i++) {
